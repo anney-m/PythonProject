@@ -1,7 +1,7 @@
 # Тренажерный зал для женщин
 
 # Название проекта
-Pink Metal (Наш слоган - "Eat, prey, pump")
+Pink Metal (Наш слоган - "Eat, pray, pump")
 # Состав группы
 Масленникова Анна (github anney-m), Самсонова Анна (github smsnva), Горяева Тегряш (github tegryash), Сазонова София (github toijvz)
 # Идея проекта
