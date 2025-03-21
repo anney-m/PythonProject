@@ -184,15 +184,13 @@ with pd.ExcelWriter('services_data3.xlsx', engine='openpyxl') as writer:
 third_website = pd.concat(lists, ignore_index=True)
 
 # Дашборды
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
+# Я решила оформить дашборд в одной цветовой гамме,
+# и нейросеть любезно подсказала мне, какие конкретно html кода цветов мне нужны и как их добавить в мой проект
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 
 first_website_mean = first_website['Цена'].mean()
 second_website_mean = second_website['Цена'].mean()
 third_website_mean = third_website['Цены'].mean()
-
-print(first_website_mean)
-print(second_website_mean)
-print(third_website_mean)
 
 data = {
     'Фитнес-зал': ['Women Secrets', 'Мой фитнес', 'Reshape'],
@@ -201,82 +199,101 @@ data = {
 
 df_for_dashboard = pd.DataFrame(data)
 
-fig = px.bar(df_for_dashboard, x='Фитнес-зал', y='Средняя цена')
-fig.update_layout(title_text='Средняя цена услуги у конкурентов', title_x=0.5, title_font_size=30)
+fig = px.bar(df_for_dashboard, x='Фитнес-зал', y='Средняя цена', color='Фитнес-зал', color_discrete_sequence=['#FF69B4', '#FF1493', '#DB7093'])
+fig.update_layout(
+    title_text='Средняя цена услуги у конкурентов',
+    title_x=0.5,
+    title_font_size=30,
+    plot_bgcolor='#FFF0F5',
+    paper_bgcolor='#FFF0F5'
+)
+
 text_card = dbc.Card(
     [
         dbc.CardHeader(
             'Информация о данных',
             style={
                 'fontSize': '24px',
-                'fontWeight': 'bold'
+                'fontWeight': 'bold',
+                'backgroundColor': '#FF69B4',
+                'color': 'white'
             }
         ),
         dbc.CardBody(
             [
                 html.P(
                     'Получили три датасета с услугами конкурентов.',
-                    style={'fontSize': '18px'}
+                    style={'fontSize': '18px', 'color': '#333333'}
                 ),
                 html.P(
                     'Данные включают цены, виды тренировок и абонементов.',
-                    style={'fontSize': '18px'}
+                    style={'fontSize': '18px', 'color': '#333333'}
                 )
-            ]
+            ],
+            style={'backgroundColor': '#FFF0F5'}  # Розовый фон тела карточки
         )
     ]
 )
 
+dropdown_style = {'backgroundColor': '#FFF0F5', 'color': '#333333'}
+card_style = {'backgroundColor': '#FFF0F5', 'border': '1px solid #FF69B4'}
+
 dropdown_first = dcc.Dropdown(
     id='dropdown-first',
     options=[{'label': service, 'value': service} for service in first_website['Название услуги']],
-    value=first_website['Название услуги'][0]
+    value=first_website['Название услуги'][0],
+    style=dropdown_style
 )
 
 dropdown_second = dcc.Dropdown(
     id='dropdown-second',
     options=[{'label': service, 'value': service} for service in second_website_services['Название услуги']],
-    value=second_website_services['Название услуги'][0]
+    value=second_website_services['Название услуги'][0],
+    style=dropdown_style
 )
 
 dropdown_third = dcc.Dropdown(
     id='dropdown-third',
     options=[{'label': service, 'value': service} for service in third_website_services['Название услуги']],
-    value=third_website_services['Название услуги'][0]
+    value=third_website_services['Название услуги'][0],
+    style=dropdown_style
 )
 
 card_first = dbc.Card(
     [
-        dbc.CardHeader('Women Secrets'),
+        dbc.CardHeader('Women Secrets', style={'backgroundColor': '#FF69B4', 'color': 'white'}),
         dbc.CardBody(
             [
-                html.P('Виды тренировок и прочих услуг'),
+                html.P('Виды тренировок и прочих услуг', style={'color': '#333333'}),
                 dropdown_first
-            ]
+            ],
+            style=card_style
         )
     ]
 )
 
 card_second = dbc.Card(
     [
-        dbc.CardHeader('Мой фитнес'),
+        dbc.CardHeader('Мой фитнес', style={'backgroundColor': '#FF69B4', 'color': 'white'}),
         dbc.CardBody(
             [
-                html.P('Виды тренировок и прочих услуг'),
+                html.P('Виды тренировок и прочих услуг', style={'color': '#333333'}),
                 dropdown_second
-            ]
+            ],
+            style=card_style
         )
     ]
 )
 
 card_third = dbc.Card(
     [
-        dbc.CardHeader('Reshape'),
+        dbc.CardHeader('Reshape', style={'backgroundColor': '#FF69B4', 'color': 'white'}),
         dbc.CardBody(
             [
-                html.P('Виды тренировок и прочих услуг'),
+                html.P('Виды тренировок и прочих услуг', style={'color': '#333333'}),
                 dropdown_third
-            ]
+            ],
+            style=card_style
         )
     ]
 )
@@ -285,7 +302,7 @@ app.layout = dbc.Container(
     [
         dbc.Row(
             [
-                dbc.Col(html.H1("Анализ конкурентов"), align='stretch')
+                dbc.Col(html.H1("Анализ конкурентов", style={'color': '#FF69B4'}), align='stretch')
             ]
         ),
         dbc.Row(
@@ -306,8 +323,11 @@ app.layout = dbc.Container(
                 dbc.Col(text_card, md=12)
             ]
         )
-    ]
+    ],
+    style={'backgroundColor': '#FFF0F5'}
 )
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
